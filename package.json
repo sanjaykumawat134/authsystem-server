@@ -1,0 +1,26 @@
+{
+  "name": "authsystem-server",
+  "version": "1.0.0",
+  "description": "simple authentication and crud system",
+  "main": " ",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "env-cmd -f./config/dev.env nodemon src/index.js",
+    "db": "/Users/Lenovo/mongodb/bin/mongod.exe --dbpath=/Users/Lenovo/mongodb-data",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "sanjay kumawat",
+  "license": "ISC",
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.12"
+  },
+   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^4.0.1",
+    "mongoose": "^5.13.3",
+    "validator": "^13.6.0"
+  }
+}
