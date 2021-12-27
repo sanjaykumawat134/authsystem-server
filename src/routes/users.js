@@ -2,7 +2,7 @@ const express = require("express");
 const userRoutes = new express.Router();
 const User = require("../models/User");
 const auth = require("../middleware/auth");
-
+const sendEmail = require("../utilities/sendEmail")
 
 userRoutes.get("/", (req, res) => {
   res.json("Hello world ! welcome").send();
@@ -45,7 +45,36 @@ userRoutes.get("/logout", auth, async (req, res) => {
     res.status(400).send({ error });
   }
 });
+userRoutes.post("/reset-password", async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email });
+    if (!user)    return res.status(400).send("user with given email doesn't exist");
+    const token = await user.generateToken();
+    const link = `${process.env.BASE_URL}password-reset/${user._id}/${token}`;
+    await sendEmail(user.email, "Password reset", link);
+    res.send("password reset link sent to your email account");
+  } catch (error) {
+    console.log("error",error)
+    res.status(400).send(error);
+  }
+});
+userRoutes.post("/:userId/:token", async (req, res) => {
+  try {
+        // const {password} = req.body;
+       
+        const user = await  User.findOne({ _id: req.params.userId, "tokens.token":req.params.token });
+        user.password = req.body.password;
+        await user.save();
+        //optimization
+        const index = user.tokens.indexOf(req.params.token);
+        user.tokens.splice(index, 1);
+        await user.save();
+        res.send("password reset sucessfully.");
+      } catch (error) {
+    console.log("error",error)
+    res.status(400).send(error);
+  }
 
-
+});
 
 module.exports = userRoutes;
