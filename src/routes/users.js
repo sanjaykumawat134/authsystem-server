@@ -50,7 +50,7 @@ userRoutes.post("/reset-password", async (req, res) => {
     const user = await User.findOne({ email: req.body.email });
     if (!user)    return res.status(400).send("user with given email doesn't exist");
     const token = await user.generateToken();
-    const link = `${process.env.BASE_URL}password-reset/${user._id}/${token}`;
+    const link = `${process.env.BASE_URL}/password-reset/${user._id}/${token}`;
     await sendEmail(user.email, "Password reset", link);
     res.send("password reset link sent to your email account");
   } catch (error) {
